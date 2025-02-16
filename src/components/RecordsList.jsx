@@ -14,24 +14,23 @@ function RecordsList() {
   if (isLoading) return <Spinner />;
 
   return (
-    <div className="scroll h-[400px] overflow-y-scroll pe-1">
+    <div className="overflow-y-scroll pe-2">
       {audios.length === 0 ? (
         <Empty />
       ) : (
         audios.map((audio) => (
           <motion.div
-          key={audio.id}
-          initial={{ opacity: 0, scale: 0.9 }}
-          animate={{ opacity: 1, scale: 1 }}
-          exit={{ opacity: 0, scale: 0.9 }}
-          transition={{ duration: 0.3, ease: "easeInOut" }}
-          layout
+            key={audio.id}
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.9 }}
+            transition={{ duration: 0.3, ease: "easeInOut" }}
+            layout
           >
             <AudioPlayer
               volume={1}
               className="relative"
               src={audio.src}
-              key={audio.id}
               layout="horizontal-reverse"
               customProgressBarSection={[RHAP_UI.PROGRESS_BAR]}
               showJumpControls={false}

@@ -1,4 +1,4 @@
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import { HiOutlineMicrophone } from "react-icons/hi";
 import { BiMicrophoneOff } from "react-icons/bi";
 import { LiveAudioVisualizer } from "react-audio-visualize";
@@ -24,7 +24,7 @@ function VoiceRecorder() {
     if (clickDisabled) return;
     setClickDisabled(true);
     startRecording();
-    setTimeout(() => setClickDisabled(false), 500);
+    setTimeout(() => setClickDisabled(false), 1000);
   }
 
   function handleStopRecord() {
@@ -35,7 +35,7 @@ function VoiceRecorder() {
   }
 
   return (
-    <div className="flex flex-col items-center gap-4">
+    <div className="flex flex-col items-center gap-8 sm:gap-4">
       <motion.div
         whileTap={{ scale: 0.9 }}
         animate={{ y: isRecording ? 0 : 110 }}
@@ -51,18 +51,16 @@ function VoiceRecorder() {
         </RecordButton>
       </motion.div>
 
-      <AnimatePresence>
-        {isRecording && (
-          <motion.div
-            initial={{ opacity: 0, y: -10 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -10 }}
-            transition={{ duration: 0.3 }}
-          >
-            <RecordingTimer time={recordingTime} />
-          </motion.div>
-        )}
-      </AnimatePresence>
+      {isRecording && (
+        <motion.div
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -10 }}
+          transition={{ duration: 0.3 }}
+        >
+          <RecordingTimer time={recordingTime} />
+        </motion.div>
+      )}
 
       <motion.div
         key={isRecording ? "visualizer" : "waveform"}
@@ -71,7 +69,7 @@ function VoiceRecorder() {
         exit={{ opacity: 0, scale: 0.9 }}
         transition={{ duration: 0.3 }}
       >
-        {isRecording ? (
+        {isRecording && (
           <LiveAudioVisualizer
             mediaRecorder={mediaRecorder}
             barColor="#AD46FF"
@@ -79,8 +77,6 @@ function VoiceRecorder() {
             barWidth={8}
             height={100}
           />
-        ) : (
-          <div style={{ height: 100, width: 300 }} />
         )}
       </motion.div>
 

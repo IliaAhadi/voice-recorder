@@ -8,7 +8,7 @@ function RecordButton({
     <div className="relative">
       <button
         onClick={onClick}
-        className="relative z-10 rounded-full border-8 border-purple-600 bg-purple-500 p-14 text-6xl text-white"
+        className="relative z-10 rounded-full border-8 border-purple-600 bg-purple-500 p-18 text-7xl text-white sm:p-12"
       >
         {children}
       </button>
