@@ -21,7 +21,7 @@ function RecordsList() {
         const data = await getAll();
         setAudios(data);
       } catch {
-        toast.error("Error saving audio");
+        toast.error("Error fetch audios");
       } finally {
         setIsLoading(false);
       }
