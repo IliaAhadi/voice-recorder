@@ -7,14 +7,32 @@ import Empty from "./Empty";
 import { useRecorderContext } from "../contexts/RecorderContext";
 import Spinner from "./Spinner";
 import { motion } from "motion/react";
+import { useEffect, useState } from "react";
+import toast from "react-hot-toast";
 
 function RecordsList() {
-  const { audios, isLoading } = useRecorderContext();
+  const { audios, setAudios, getAll } = useRecorderContext();
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchAudios = async () => {
+      setIsLoading(true);
+      try {
+        const data = await getAll();
+        setAudios(data);
+      } catch {
+        toast.error("Error saving audio");
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    fetchAudios();
+  }, [getAll, setAudios]);
 
   if (isLoading) return <Spinner />;
 
   return (
-    <div className="overflow-y-scroll pe-2">
+    <div className="h-full overflow-y-scroll pe-2">
       {audios.length === 0 ? (
         <Empty />
       ) : (
@@ -28,14 +46,13 @@ function RecordsList() {
             layout
           >
             <AudioPlayer
-              volume={1}
               className="relative"
               src={audio.src}
               layout="horizontal-reverse"
               customProgressBarSection={[RHAP_UI.PROGRESS_BAR]}
               showJumpControls={false}
               customAdditionalControls={[
-                <div key={audio.id} className="p-0">
+                <div key={crypto.randomUUID()} className="p-0">
                   <ContextMenu
                     audio={audio}
                     src={audio.src}
