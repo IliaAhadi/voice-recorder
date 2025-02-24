@@ -12,7 +12,6 @@ function VoiceRecorder() {
   const {
     startRecording,
     stopRecording,
-    togglePauseResume,
     isRecording,
     recordingTime,
     isPaused,
@@ -31,7 +30,7 @@ function VoiceRecorder() {
     if (clickDisabled) return;
     setClickDisabled(true);
     stopRecording();
-    setTimeout(() => setClickDisabled(false), 500);
+    setTimeout(() => setClickDisabled(false), 1000);
   }
 
   return (
@@ -80,14 +79,7 @@ function VoiceRecorder() {
         )}
       </motion.div>
 
-      {isRecording && (
-        <RecorderActions
-          isPaused={isPaused}
-          togglePauseResume={togglePauseResume}
-          stopRecording={handleStopRecord}
-          isRecording={isRecording}
-        />
-      )}
+      {isRecording && <RecorderActions />}
     </div>
   );
 }

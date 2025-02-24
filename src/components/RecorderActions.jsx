@@ -1,18 +1,27 @@
 import { HiPause, HiPlay } from "react-icons/hi";
 import { motion, AnimatePresence } from "framer-motion";
+import { useRecorderContext } from "../contexts/RecorderContext";
 
-function RecorderActions({
-  togglePauseResume,
-  stopRecording,
-  isPaused,
-  isRecording,
-}) {
+function RecorderActions() {
+  const {
+    togglePauseResume,
+    stopRecording,
+    isPaused,
+    isRecording,
+    setDiscard,
+  } = useRecorderContext();
+
   const toggleBtnClasses =
     "absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-6xl text-purple-500 ";
 
   function handlePause() {
     if (!isRecording) return;
     togglePauseResume();
+  }
+
+  function handleDiscard() {
+    setDiscard(true);
+    stopRecording();
   }
 
   return (
@@ -25,7 +34,12 @@ function RecorderActions({
         transition={{ duration: 0.3 }}
       >
         <div className="relative flex w-full justify-between rounded-full bg-purple-100 px-1 font-bold">
-          <button disabled className="px-2 py-1 text-gray-400" title="Soon">
+          <button
+            onClick={handleDiscard}
+            disabled={true}
+            className="px-2 py-1"
+            title="Soon"
+          >
             Discard
           </button>
 

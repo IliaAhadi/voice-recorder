@@ -1,17 +1,9 @@
-import {
-  createContext,
-  useCallback,
-  useContext,
-  useEffect,
-  useState,
-} from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 import { useAudioRecorder } from "react-audio-voice-recorder";
 import toast from "react-hot-toast";
-import setupIndexedDB, { useIndexedDBStore } from "use-indexeddb";
-import idbConfig from "../config/idbConfig";
+import { useIndexedDBStore } from "use-indexeddb";
 
 const RecorderContext = createContext();
-setupIndexedDB(idbConfig);
 
 export function RecorderProvider({ children }) {
   const {
@@ -26,66 +18,34 @@ export function RecorderProvider({ children }) {
   } = useAudioRecorder();
 
   const [audios, setAudios] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
   const { getAll, add, deleteByID } = useIndexedDBStore("audios");
-
-  const fetchAudios = useCallback(
-    async (isLoading = true) => {
-      setIsLoading(isLoading);
-      try {
-        const data = await getAll();
-        setAudios(data);
-      } catch {
-        toast.error("Error saving audio");
-      } finally {
-        setIsLoading(false);
-      }
-    },
-    [getAll],
-  );
-
-  useEffect(() => {
-    fetchAudios();
-  }, [fetchAudios]);
 
   useEffect(() => {
     if (!recordingBlob) return;
 
     const reader = new FileReader();
+
     reader.readAsDataURL(recordingBlob);
     reader.onloadend = async () => {
       const base64Audio = reader.result;
       try {
         await add({ src: base64Audio, createdAt: new Date() });
         toast.success("Audio saved");
-        fetchAudios();
-      } catch {
-        toast.error("Error saving audio");
+      } catch (err) {
+        toast.error(err);
       }
     };
-  }, [add, recordingBlob, fetchAudios]);
 
-  const handleDeleteAudio = useCallback(
-    async (id) => {
-      if (!id) return;
-      try {
-        await deleteByID(id);
-        toast.success("Audio deleted");
-        fetchAudios(false);
-      } catch (error) {
-        console.error("Delete error:", error);
-        toast.error("Error deleting audio");
-      }
-    },
-    [deleteByID, fetchAudios],
-  );
+    return () => {
+      reader.abort();
+    };
+  }, [recordingBlob, add]);
 
   return (
     <RecorderContext.Provider
       value={{
         audios,
-        isLoading,
-        handleDeleteAudio,
+        setAudios,
         startRecording,
         stopRecording,
         togglePauseResume,
@@ -94,6 +54,9 @@ export function RecorderProvider({ children }) {
         recordingTime,
         isPaused,
         mediaRecorder,
+        getAll,
+        add,
+        deleteByID,
       }}
     >
       {children}

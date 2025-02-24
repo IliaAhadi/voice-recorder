@@ -3,10 +3,12 @@ function RecordButton({
   onClick,
   isRecording = false,
   isPaused = false,
+  disabled,
 }) {
   return (
     <div className="relative">
       <button
+        disabled={disabled}
         onClick={onClick}
         className="relative z-10 rounded-full border-8 border-purple-600 bg-purple-500 p-18 text-7xl text-white sm:p-12"
       >

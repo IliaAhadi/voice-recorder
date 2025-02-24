@@ -1,12 +1,13 @@
-import { useEffect } from "react";
+import { useCallback, useEffect } from "react";
 import { useRef, useState } from "react";
 import { HiDownload, HiTrash } from "react-icons/hi";
 import { useRecorderContext } from "../contexts/RecorderContext";
 import { motion, AnimatePresence } from "framer-motion";
+import toast from "react-hot-toast";
 
 function ContextMenu({ className, icon, src, audio }) {
   const [showMenu, setShowMenu] = useState(false);
-  const { handleDeleteAudio } = useRecorderContext();
+  const { deleteByID, getAll, setAudios } = useRecorderContext();
   const menuRef = useRef();
 
   const liStyles =
@@ -39,9 +40,21 @@ function ContextMenu({ className, icon, src, audio }) {
     document.body.removeChild(link);
   }
 
-  function handleDelete() {
-    handleDeleteAudio(audio.id);
-  }
+  const deleteAudio = useCallback(
+    async (id) => {
+      if (!id) return;
+      try {
+        await deleteByID(id);
+        const data = await getAll();
+        setAudios(data);
+        toast.success("Audio deleted");
+      } catch (error) {
+        console.error("Delete error:", error);
+        toast.error("Error deleting audio");
+      }
+    },
+    [deleteByID, getAll, setAudios],
+  );
 
   return (
     <button
@@ -63,7 +76,7 @@ function ContextMenu({ className, icon, src, audio }) {
               <HiDownload className={iconStyles} />
               Download
             </li>
-            <li className={liStyles} onClick={handleDelete}>
+            <li className={liStyles} onClick={() => deleteAudio(audio.id)}>
               <HiTrash className={iconStyles} />
               Delete
             </li>
