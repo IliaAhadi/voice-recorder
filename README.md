@@ -158,5 +158,3 @@ If you have any questions or feedback, feel free to reach out:
 ---
 
 If you have any questions, feel free to open an issue or submit a pull request.
-
-Enjoy building with React! 😄
