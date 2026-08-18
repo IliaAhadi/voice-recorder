@@ -148,6 +148,13 @@ export default RecorderApp;
 
 Feel free to modify the app’s design, add more features, or change the functionality based on your needs. You can use additional libraries or integrate it with backend services for storing or sharing the recordings.
 
+## Contact
+
+If you have any questions or feedback, feel free to reach out:
+
+- **Email**: iliya.ahadi@gmail.com
+- **GitHub**: [IliaAhd](https://github.com/IliaAhadi)
+
 ---
 
 If you have any questions, feel free to open an issue or submit a pull request.
